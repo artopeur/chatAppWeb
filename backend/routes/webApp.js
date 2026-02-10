@@ -1,12 +1,12 @@
 var express = require('express');
 var router = express.Router();
 
-var msgStorage = [];
+var msgStorage = [{message:"a"}, {message:"b"}, {message:"c"}];
 
 
 var webApp = (
   router.get('/', function(req, res, next) {
-    console.log(req);
+    //console.log(req);
     res.json({message: "Hello World"});
     console.log("Main route hit");
   },
