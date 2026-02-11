@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel = "stylesheet" href = "style.css">
+    <meta name = "viewport" content = "width=device-width, initial-scale=1.0">
+    
+    <title>ChatApp</title>
+    <script src="/scripts/main.js"></script>
+    <script src="/scripts/socket.io.js"></script>
+</head>
+<body>
+    <div class = "container">
+        <div id = "users">
+            <h3>Users</h3>
+            <label>User:</label><input type="text" id="usernameInput" placeholder="Enter username"/></label><br>
+            <label>disappearing messages<input type="checkbox" name="disappearing"></input></label><br>
+            <select id="interval">
+                <option value="2000">2 seconds</option>
+                <option value="5000">5 seconds</option>
+                <option value="10000">10 seconds</option>
+                <option value="20000" selected>20 seconds</option>
+            </select>
+            <ul id = "userList"></ul>
+        </div>
+        <div id = "rooms">
+            <select id="roomSelect" name="rooms">
+                <option value="" selected>Select a room</option>
+                <option value="room1">Room 1</option>
+                <option value="room2">Room 2</option>
+                <option value="room3">Room 3</option>
+            </select>
+        </div>
+    </div>
+    <div class = "container">
+        <div id = "messages">
+            <ul id = "messageList"></ul>
+        </div>
+
+        <div>
+        <form id = "form" action="">
+            <input id = "chatInput" autocomplete="off" placeholder="Type a message..."/><button id="sendButton">Send</button>
+        </form>
+        </div>
+    </div>
+</body>
+</html>

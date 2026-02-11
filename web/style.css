@@ -1,0 +1,109 @@
+body{
+    width: 95vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    border: none;
+    margin-top:1vh;
+    margin-bottom: 1vh;
+    margin-left:1vh;
+    margin-right:1vh;
+    font: 16px/1.5 Arial, sans-serif;
+    overflow:none;
+    align-items: top;
+}
+ul, li{
+    list-style-type: none;
+    list-style-position:inside;
+    padding:0px;
+    margin:0px;
+}
+div .container{
+    display: block;
+    width: 95vw;
+    scroll-behavior: none;
+}
+div select {
+    border-radius: 5px;
+    padding: 5px;
+    margin: 5px;
+    width: 100vw;
+    height: 30px;
+}
+#interval {
+    display:block;
+    width:95vw;
+    height: 30px;
+    border-radius:5px;
+}
+
+div #messages {
+    overflow:auto;
+    height: 60vh;
+    width:95vw;
+    text-wrap: wrap;
+    font-size:0.9em;
+    overflow-y: scroll;
+    padding: 1px;
+    
+    margin-bottom: 10px;
+    flex-direction:column;
+}
+#messageList {
+    display: flex;
+    flex-direction: column;
+    background-color: lightblue;
+    border= 1px solid #ccc;
+    
+}
+div #users {
+    flex-direction: column;
+}
+div #rooms {
+    height: 5vh;
+    width: 90vw;
+    display: flex;
+    padding-bottom:3px;
+}
+input {
+    border-radius:5px;
+    color:rgb(0, 0, 0);
+    background-color:lightblue
+}
+button {
+    margin: 0.1em 0.1em;
+    padding: 0.1em;
+    border-radius: 5px;
+    background-color: blue;
+    color: white;
+}
+#form {
+    display: flex;
+    width: 90vw;
+    padding: 0.1em;
+}
+#form input {
+    flex: 1;
+    margin-right: 0.1em;
+}
+
+@media (max-width: 600px) {
+    body {
+        width: 100vw;
+        height: 100vh;
+        font-size: 0.8em;
+        margin: 0;
+        padding: 0;
+    }
+    div #messages {
+        height: 50vh;
+        width: 100vw;
+    }
+    div #rooms {
+        width: 100vw;
+    }
+    #form {
+        width: 100vw;
+    }
+}
