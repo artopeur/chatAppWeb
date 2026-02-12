@@ -1,14 +1,24 @@
-const socket = io("http://localhost:3112");
+document.addEventListener('DOMContentLoaded', function () {
+    const socket = io("http://localhost:3112");
+    const messageList = document.querySelector('#messageList');
 
-socket.emit("set-username", "Alice");
-socket.emit("join-room", "room-1");
+    socket.emit("set-username", "chatbot1");
+    socket.emit("join-room", "room1");
 
-socket.on("message", (msg) => {
-  console.log(`${msg.from}: ${msg.text}`);
+    socket.emit("set-username", "chatbot2");
+    socket.emit("join-room", "room2");
+
+    socket.emit("set-username", "chatbot3");
+    socket.emit("join-room", "room3");
+
+    socket.on("message", (msg) => {
+        console.log(`${msg.from}: ${msg.text}`);
+        const li = document.createElement('li');
+        li.textContent = `${msg.from}: ${msg.text}`;
+        messageList.appendChild(li);
+    });
+    socket.emit("message", {
+        roomId: document.querySelector('#roomSelect').value.trim(),
+        text: document.querySelector('#usernameInput').value.trim() + " has joined the room!"
+    });
 });
-
-socket.emit("message", {
-  roomId: "room-1",
-  text: "Hello everyone!"
-});
-

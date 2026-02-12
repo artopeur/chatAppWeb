@@ -4,7 +4,7 @@ var messageStore = require('../models/messageStore');
 
 
 const rooms = [
-  { id: "room11", name: "General" },
+  { id: "room1", name: "General" },
   { id: "room2", name: "Tech" },
   { id: "room3", name: "class" }
 ];

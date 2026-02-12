@@ -1,6 +1,9 @@
+
+
 document.addEventListener('DOMContentLoaded', () => {
     
     console.log('document ready');
+    const socket = io("http://localhost:3112");
     var messages = [];
     var timedEventCounter = 0;
     var intervalTimer = null;
@@ -55,18 +58,19 @@ document.addEventListener('DOMContentLoaded', () => {
         let message = chatInput.value;
         console.log('chat message', message);
         addMessage(message);
-        //socket.emit('chat message', message);
+        socket.emit('chat message', {roomId: selectRoom.value, text: message});
         chatInput.value = '';
     });
 
     selectRoom.addEventListener('change', function (e) {
         e.preventDefault();
-        let room = selectRoom.value.trim();
+       
         if(userNameInput.value.trim() === '') {
             alert('Please enter a username before joining a room.');
             selectRoom.value = '';
             return;
         }
+        let room = selectRoom.value.trim();
         if(room === '') {
              
             return;
@@ -74,7 +78,10 @@ document.addEventListener('DOMContentLoaded', () => {
         let name = userNameInput.value.trim();
         console.log('joining room', room);
         console.log('username', name);
-        //socket.emit('join room', roomName);
+        socket.emit("set-username", name);
+        socket.emit("join-room", room);
+        socket.emit("message", {roomId: room, text:" has joined the room!"});
+        //messageList.innerHTML = '';
     });
     interval.addEventListener('change', function (e) {
         e.preventDefault();
@@ -82,12 +89,15 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('setting new interval', parseInt(interval.value));
     });
 
-    function addMessage(msg, sender = 'me', timestammp = new Date().toLocaleTimeString()) {
-            
+    function addMessage(msg) {
+            sender = userNameInput.value
+            room = selectRoom.value
             if(msg === '') return;
             let li = document.createElement('li');
-            li.textContent = timestammp + ": " + sender + ": " + msg;
-            messages.push(msg);
+            let timestammp = new Date().toLocaleTimeString();
+            //li.textContent = timestammp + ": " + sender + ": " + msg;
+            //messages.push(msg);
+            socket.emit('message', {roomId: room, text: timestammp + ": " + msg});
             if(enabled) {
                 let current = messages.length - 1;
                 li.style.backgroundColor = 'red';
