@@ -1,26 +1,33 @@
 var express = require('express');
 var router = express.Router();
+var messageStore = require('../models/messageStore');
 
-var msgStorage = [{message:"a"}, {message:"b"}, {message:"c"}];
+
+const rooms = [
+  { id: "room11", name: "General" },
+  { id: "room2", name: "Tech" },
+  { id: "room3", name: "class" }
+];
+
+router.get('/rooms', function (req, res) {
+  res.json(rooms);
+});
+
+router.get('/', function(req, res) {
+  res.json({message: "API running"});
+  console.log("Main route hit");
+});
+
+router.get('/messages', function(req, res, next) {
+  const roomId = req.query.roomId;
+
+  if (!roomId) {
+    return res.status(400).json({ error: "roomId required" });
+  }
+
+  res.json(messageStore.list(roomId));
+});
 
 
-var webApp = (
-  router.get('/', function(req, res, next) {
-    //console.log(req);
-    res.json({message: "Hello World"});
-    console.log("Main route hit");
-  },
-  router.post('/message', function(req, res, next) {
-    console.log(req.body);
-    msgStorage.push(req.body);
-    res.json({message: "Message received"});
-    console.log("Message route hit");
-  }),
-  router.get('/messages', function(req, res, next) {
-    res.json(msgStorage);
-    console.log("Messages route hit");
-  })
-  
-));
 
-module.exports = webApp;
+module.exports = router;

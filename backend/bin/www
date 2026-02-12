@@ -9,6 +9,7 @@ var dotenv = require('dotenv');
 dotenv.config();
 var debug = require('debug')('backend:server');
 var http = require('http');
+var initSocket = require('../sockets/chatSocket');
 
 /**
  * Get port from environment and store in Express.
@@ -23,6 +24,7 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
+initSocket(server); // add socket.io initialization here
 
 /**
  * Listen on provided port, on all network interfaces.
