@@ -21,8 +21,12 @@ ul, li{
 }
 div .container{
     display: block;
+    height:70vh;
     width: 95vw;
     scroll-behavior: none;
+}
+div #disappearingOptions { /*Not ready yet, will be used to toggle visibility of the disappearing messages options*/
+    visibility:hidden;
 }
 div select {
     border-radius: 5px;
@@ -40,13 +44,13 @@ div select {
 
 div #messages {
     overflow:auto;
-    height: 60vh;
+    height: 65vh;
     width:95vw;
     text-wrap: wrap;
     font-size:0.9em;
     overflow-y: scroll;
     padding: 1px;
-    
+    background-color: lightblue;
     margin-bottom: 10px;
     flex-direction:column;
 }
@@ -55,7 +59,43 @@ div #messages {
     flex-direction: column;
     background-color: lightblue;
     border: 1px solid #ccc;
+    gap: 5px;
+    padding: 5px;
+}
+
+#messageList li.my-message {
+    align-self: flex-end;
+    background-color: rgb(133, 209, 130);
     
+    color: rgb(0, 0, 0);
+    padding: 8px 12px;
+    border-radius: 8px;
+    max-width: 70%;
+    word-wrap: break-word;
+    display: flex;
+    flex-direction: column;
+}
+
+#messageList li.other-message {
+    align-self: flex-start;
+    background-color: #8282d1;
+    color: rgb(243, 239, 239);
+    padding: 8px 12px;
+    border-radius: 8px;
+    max-width: 70%;
+    word-wrap: break-word;
+    display: flex;
+    flex-direction: column;
+}
+
+.message-sender {
+    font-size: 0.75em;
+    opacity: 0.8;
+    margin-bottom: 4px;
+}
+
+.message-text {
+    font-size: 1em;
 }
 div #users {
     flex-direction: column;
@@ -75,8 +115,8 @@ button {
     margin: 0.1em 0.1em;
     padding: 0.1em;
     border-radius: 5px;
-    background-color: blue;
-    color: white;
+    background-color: #0000ff;
+    color: #ffffff;
 }
 #form {
     display: flex;

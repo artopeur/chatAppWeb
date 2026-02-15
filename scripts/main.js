@@ -17,8 +17,58 @@ document.addEventListener('DOMContentLoaded', () => {
     const messageList = document.querySelector('#messageList');
     const checkbox = document.querySelector('input[type="checkbox"]');
 
+    // Helper function to escape HTML entities
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    // Map of roomId -> roomName
+    const roomsById = {};
+
+    // Fetch rooms from server and populate the room select
+    async function loadRooms() {
+        try {
+            const res = await fetch('http://localhost:3112/rooms');
+            const rooms = await res.json();
+            // reset options
+            selectRoom.innerHTML = '<option value="">Select a room...</option>';
+            rooms.forEach(r => {
+                const opt = document.createElement('option');
+                opt.value = r.id;
+                opt.textContent = r.name;
+                selectRoom.appendChild(opt);
+                roomsById[r.id] = r.name;
+            });
+            console.log('Loaded rooms:', rooms);
+        } catch (err) {
+            console.error('Failed to load rooms', err);
+        }
+    }
+
+    // load rooms on startup
+    loadRooms();
+
     console.log(chatInput, sendButton, roomNameInput, userNameInput, checkbox);
     //sendButton.style.backgroundColor = 'blue';
+    
+    // Listen for incoming messages from server
+    socket.on("message", (msg) => {
+        const username = msg.from;
+        const timeStr = msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString() : '';
+        console.log(`${msg.from}: ${msg.text.text}`);
+        const li = document.createElement('li');
+        li.innerHTML = `<div class="message-sender">${escapeHtml(username)} - ${escapeHtml(timeStr)}</div><div class="message-text">${escapeHtml(msg.text)}</div>`;
+        if (username === userNameInput.value.trim()) {
+            li.classList.add('my-message');
+        } else {
+            li.classList.add('other-message');
+        }
+        messageList.appendChild(li);
+        scrollToBottom();
+    });
+
     checkbox.addEventListener('change', function() {
         if (this.checked) {
             console.log('Checkbox is checked');
@@ -90,27 +140,31 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function addMessage(msg) {
-            sender = userNameInput.value
-            room = selectRoom.value
-            if(msg === '') return;
+            const sender = userNameInput.value.trim() || 'me';
+            const room = selectRoom.value;
+            if (msg === '') return;
             let li = document.createElement('li');
             let timestammp = new Date().toLocaleTimeString();
-            //li.textContent = timestammp + ": " + sender + ": " + msg;
-            //messages.push(msg);
-            socket.emit('message', {roomId: room, text: timestammp + ": " + msg});
-            if(enabled) {
+            li.innerHTML = `<div class="message-sender">${escapeHtml(sender)} - ${escapeHtml(timestammp)}</div><div class="message-text">${escapeHtml(msg)}</div>`;
+            li.classList.add('my-message');
+            // send to server (timestamp is shown separately in UI)
+            socket.emit('message', {roomId: room, text: msg});
+            if (enabled) {
                 let current = messages.length - 1;
                 li.style.backgroundColor = 'red';
                 window.clearTimeout(intervalTimer);
                 intervalTimer = window.setTimeout(() => timingEvent(current), parseInt(interval.value));
             }
             
-            let divMessages = document.querySelector('div#messages');
-            messageList.appendChild(li);
-            divMessages.scrollTop = divMessages.scrollHeight;
-            divMessages.nativeScroll = true;
-            divMessages.scrollIntoView({ behavior: 'smooth', block: 'end' });
+            //messageList.appendChild(li);
+            scrollToBottom();
         
+    }
+    function scrollToBottom() {
+        let divMessages = document.querySelector('div#messages');
+        divMessages.scrollTop = divMessages.scrollHeight;
+        divMessages.nativeScroll = true;
+        divMessages.scrollIntoView({ behavior: 'smooth', block: 'end' });
     }
     function timingEvent(messageid) {
         console.log('timing event. remove first red message if exists');

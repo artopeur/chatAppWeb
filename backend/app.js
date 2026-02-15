@@ -1,5 +1,6 @@
 var express = require('express');
 var path = require('path');
+var cors = require('cors');
 //var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var dotenv = require('dotenv');
@@ -8,6 +9,11 @@ var dotenv = require('dotenv');
 //var usersRouter = require('./routes/users');
 var webAppRouter = require('./routes/webApp');
 var app = express();
+
+// Enable CORS for all routes
+app.use(cors({
+  origin: '*'
+}));
 
 app.use(logger('dev'));
 app.use(express.json());
