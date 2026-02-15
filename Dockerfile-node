@@ -1,0 +1,26 @@
+# Use official Node.js image
+FROM node:18-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Copy backend package files and install dependencies
+COPY backend/package*.json ./
+RUN npm install
+
+# Copy the backend code
+COPY backend/ .
+
+# Expose backend port
+EXPOSE 3000
+
+# Copy the certs script into the container
+#COPY copy-certs.sh /usr/local/bin/copy-certs.sh
+#RUN chmod +x /usr/local/bin/copy-certs.sh
+
+# Run script before starting Node
+#CMD /usr/local/bin/copy-certs.sh
+
+
+# Start Node backend
+CMD ["npm", "start"]

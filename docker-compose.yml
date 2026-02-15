@@ -1,32 +1,38 @@
-version: '3.8'
+version: "3.8"
 
 services:
   backend:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile-node
     container_name: chatapp-backend
     ports:
-      - "3123:3123"
+      - "3000:3000"
     environment:
-      - NODE_ENV=development
+      - PORT=3000
     volumes:
-      - ./backend:/app
-      - /app/node_modules
+      - caddy_data:/caddy_data:ro
+    networks:
+      - chatnet
     restart: unless-stopped
-    # Uncomment if you need to connect to a database
-    # depends_on:
-    #   - db
 
-  # Optional: Add a database service if needed
-  # db:
-  #   image: mongo:latest
-  #   container_name: chatapp-db
-  #   ports:
-  #     - "27017:27017"
-  #   environment:
-  #     - MONGO_INITDB_ROOT_USERNAME=admin
-  #     - MONGO_INITDB_ROOT_PASSWORD=password
-  #   volumes:
-  #     - mongo_data:/data/db
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile-caddy
+    container_name: chatapp-frontend
+    ports:
+      - "8080:80"
+      - "443:443"
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - backend
+    restart: unless-stopped
 
-# volumes:
-#   mongo_data:
+volumes:
+  caddy_data:
+  caddy_config:
+networks:
+   chatnet:

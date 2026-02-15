@@ -1,0 +1,6 @@
+# Replace example.com with your domain
+chatapp.ydns.eu {
+    root * /usr/share/caddy/web
+    file_server
+
+}

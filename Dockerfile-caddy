@@ -1,0 +1,11 @@
+# Dockerfile-caddy
+FROM caddy:2.8.1-alpine
+
+# Copy your frontend files
+COPY web/ /usr/share/caddy/web/
+COPY scripts/ /usr/share/caddy/web/scripts/
+
+# Copy Caddyfile (config)
+COPY Caddyfile /etc/caddy/Caddyfile
+
+EXPOSE 80 443

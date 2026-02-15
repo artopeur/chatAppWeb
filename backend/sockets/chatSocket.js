@@ -1,13 +1,19 @@
 const { Server } = require("socket.io");
 const messageStore = require("../models/messageStore");
 
+
 function initChatSocket(server) {
   const io = new Server(server, {
-    cors: { origin: "*" }
+    path: "/socket.io",
+    transports: ["polling", "websocket"],
+    cors: {
+      origin: "*",
+      methods: ["GET", "POST"]
+    }
   });
 
   io.on("connection", (socket) => {
-    console.log("Connected:", socket.id);
+    console.log("Socket connected:", socket.id);
 
     // store username on this socket
     socket.on("set-username", (username) => {

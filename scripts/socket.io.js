@@ -1,5 +1,6 @@
+let server = "/socket-io"
 document.addEventListener('DOMContentLoaded', function () {
-    const socket = io("http://localhost:3112");
+    const socket = io(server);
     const messageList = document.querySelector('#messageList');
 
     socket.emit("set-username", "chatbot1");

@@ -7,7 +7,7 @@
     
     <title>ChatApp</title>
     <script src="/scripts/socket.io.min.js"></script>
-    <script src="/scripts/socket.io.js"></script>
+    <!--<script src="/scripts/socket.io.js"></script>-->
     <script src="/scripts/main.js"></script>
     
 </head>
@@ -16,6 +16,8 @@
         <div id = "users">
             <h3>Users</h3>
             <label>User:</label><input type="text" id="usernameInput" placeholder="Enter username"/></label><br>
+            
+            <div id="disappearingOptions">
             <label>disappearing messages<input type="checkbox" name="disappearing"></input></label><br>
             <select id="interval">
                 <option value="2000">2 seconds</option>
@@ -23,14 +25,13 @@
                 <option value="10000">10 seconds</option>
                 <option value="20000" selected>20 seconds</option>
             </select>
+            </div>
             <ul id = "userList"></ul>
         </div>
         <div id = "rooms">
             <select id="roomSelect" name="rooms">
                 <option value="" selected>Select a room</option>
-                <option value="room1">Room 1</option>
-                <option value="room2">Room 2</option>
-                <option value="room3">Room 3</option>
+                
             </select>
         </div>
     </div>
