@@ -24,6 +24,7 @@ div .container{
     height:70vh;
     width: 95vw;
     scroll-behavior: none;
+    border-radius:8px;
 }
 div #disappearingOptions { /*Not ready yet, will be used to toggle visibility of the disappearing messages options*/
     visibility:hidden;
@@ -32,7 +33,7 @@ div select {
     border-radius: 5px;
     padding: 5px;
     margin: 5px;
-    width: 100vw;
+    width: 40vw;
     height: 30px;
 }
 #interval {
@@ -45,7 +46,7 @@ div select {
 div #messages {
     overflow:auto;
     height: 65vh;
-    width:95vw;
+    width:70vw;
     text-wrap: wrap;
     font-size:0.9em;
     overflow-y: scroll;
@@ -53,12 +54,17 @@ div #messages {
     background-color: lightblue;
     margin-bottom: 10px;
     flex-direction:column;
+    border-radius:8px;
+    padding:5px;
+    margin:5px;
 }
 #messageList {
     display: flex;
     flex-direction: column;
     background-color: lightblue;
     border: 1px solid #ccc;
+    padding:5px;
+    
     gap: 5px;
     padding: 5px;
 }
@@ -108,9 +114,20 @@ div #rooms {
 }
 input {
     border-radius:5px;
+    width:40vw;
     color:rgb(0, 0, 0);
-    background-color:lightblue
+    background-color:lightblue;
+    
 }
+select {
+    border-radius: 5px;
+    padding: 5px;
+    margin: 5px;
+    width: 70vw;
+    height: 30px;
+    background-color:lightblue;
+}
+
 button {
     margin: 0.1em 0.1em;
     padding: 0.1em;
@@ -120,30 +137,26 @@ button {
 }
 #form {
     display: flex;
-    width: 90vw;
+    width: 40vw;
     padding: 0.1em;
 }
 #form input {
     flex: 1;
     margin-right: 0.1em;
+    width: 40vw;
 }
 
-@media (max-width: 600px) {
+
+@media (max-height:900px) {
     body {
-        width: 100vw;
-        height: 100vh;
+        width: 80vw;
         font-size: 0.8em;
         margin: 0;
         padding: 0;
     }
     div #messages {
-        height: 50vh;
-        width: 100vw;
+        height: 40vh;
+        width: 70vw;
     }
-    div #rooms {
-        width: 100vw;
-    }
-    #form {
-        width: 100vw;
-    }
+
 }
