@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var messageStore = require('../models/messageStore');
+const db = require('../models/database');
 
 
 const rooms = [
@@ -26,6 +27,18 @@ router.get('/messages', function(req, res, next) {
   }
 
   res.json(messageStore.list(roomId));
+});
+
+router.get('/chats', function(req,res) {
+  let data = db.query("SELECT * FROM chats LIMIT 20 ORDER BY timestamp", function(error, result) {
+    if(error) {
+      req.json(error);
+    }
+    else {
+      req.json(result);
+    }
+  });
+  console.log(data);
 });
 
 
