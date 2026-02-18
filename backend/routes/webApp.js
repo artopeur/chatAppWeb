@@ -30,7 +30,7 @@ router.get('/messages', function(req, res, next) {
 });
 
 router.get('/chats', function(req,res) {
-  let data = db.query("SELECT * FROM chats LIMIT 20 ORDER BY timestamp", function(error, result) {
+  let data = db.query("SELECT * FROM chats ORDER BY id DESC LIMIT 20", function(error, result) {
     if(error) {
       req.json(error);
     }
