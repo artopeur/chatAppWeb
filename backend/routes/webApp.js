@@ -50,7 +50,7 @@ router.post('/chats', function(req, res) {
 router.get('/chats', function(req, res) {
 	console.log("function start");
 
-	let sql = "Select * from chats order by created_at LIMIT 20";
+	let sql = "Select * from chats order by id DESC LIMIT 20";
 	database.query(sql, function(error,result) {
 	    if(error) {
 		console.log(error);
