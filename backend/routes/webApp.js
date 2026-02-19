@@ -37,7 +37,7 @@ router.get('/messages', function(req, res, next) {
 router.post('/chats', function(req, res) {
     console.log("function start");
 
-    let sql = "Insert into chats(user_id, message) VALUES(1,'this one.')";
+    let sql = "Insert into chats(sender, message) VALUES(" + req.body.sender + ","+req.body.message + ")";
     database.query(sql, function(error, result){
         if(error) {
             console.log(error);

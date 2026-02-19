@@ -2,13 +2,14 @@
 let io_url = "https://chatapp.ydns.eu:3000";
 let api_url = "https://chatapp.ydns.eu:3000/api/";
 document.addEventListener('DOMContentLoaded', () => {
-    let data = getData();
+    
     console.log('document ready');
     const socket = io.connect(io_url, {transports: ["polling", "websocket"]});
     var messages = [];
     var timedEventCounter = 0;
     var intervalTimer = null;
     var enabled = false;
+    var saveToDB = true;
     const interval = document.querySelector('#interval');
     const chatInput = document.querySelector('#chatInput');
     const sendButton = document.querySelector('#sendButton');
@@ -24,10 +25,40 @@ document.addEventListener('DOMContentLoaded', () => {
         div.textContent = text;
         return div.innerHTML;
     }
-
+    if(saveToDB) {
+        // on load
+        getData();
+    }
+    
     // Map of roomId -> roomName
     const roomsById = {};
+    function getData() {
+        try {
+            let res = fetch(api_url + "chats");
+            console.log(res);
+            let data = JSON.stringify(res);
+            console.log(data);
+        }
+        catch (err) {
+            console.log("Failed to get data");
+        }
+        
+    }
+    function setData(sdr, msg) {
+        let res = fetch(api_url + "chats", {
+  
+        method: "POST",
+        body: JSON.stringify({
+            sender: sdr,
+            message: msg,
+        }),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
 
+        });
+        console.log(res);
+    }
     // Fetch rooms from server and populate the room select
     async function loadRooms() {
         try {
@@ -47,10 +78,9 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Failed to load rooms', err);
         }
     }
-    function getData() {
-        let res = fetch(api_url + "chats");
-        console.log(res);
-    }
+
+
+  
     // load rooms on startup
     loadRooms();
 
@@ -62,6 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const username = msg.from;
         const timeStr = msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString() : '';
         console.log(`${msg.from}: ${msg.text.text}`);
+        setData(msg.from, msg.text.text);
         const li = document.createElement('li');
         li.innerHTML = `<div class="message-sender">${escapeHtml(username)} - ${escapeHtml(timeStr)}</div><div class="message-text">${escapeHtml(msg.text)}</div>`;
         if (username === userNameInput.value.trim()) {
