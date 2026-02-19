@@ -32,32 +32,47 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Map of roomId -> roomName
     const roomsById = {};
-    function getData() {
-        try {
-            let res = fetch(api_url + "chats");
-            console.log(res);
-            let data = JSON.stringify(res);
-            console.log(data);
+    // get data() retrieves data drom 
+    async function getData() {
+    try {
+        const res = await fetch(api_url + "chats");
+
+        if (!res.ok) {
+        throw new Error(`HTTP error ${res.status}`);
         }
-        catch (err) {
-            console.log("Failed to get data");
-        }
-        
+
+        const data = await res.json(); // parse JSON body
+        console.log(data);
+
+        return data;
+    } catch (err) {
+        console.error("Failed to get data:", err);
     }
-    function setData(sdr, msg) {
-        let res = fetch(api_url + "chats", {
-  
+    }
+    async function setData(sdr, msg) {
+    try {
+        const res = await fetch(api_url + "chats", {
         method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
         body: JSON.stringify({
             sender: sdr,
             message: msg,
         }),
-        headers: {
-            "Content-type": "application/json; charset=UTF-8"
+        });
+
+        if (!res.ok) {
+        throw new Error(`HTTP error ${res.status}`);
         }
 
-        });
-        console.log(res);
+        const data = await res.json(); // backend response
+        console.log("Saved:", data);
+
+        return data;
+    } catch (err) {
+        console.error("Failed to send data:", err);
+    }
     }
     // Fetch rooms from server and populate the room select
     async function loadRooms() {
@@ -91,8 +106,8 @@ document.addEventListener('DOMContentLoaded', () => {
     socket.on("message", (msg) => {
         const username = msg.from;
         const timeStr = msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString() : '';
-        console.log(`${msg.from}: ${msg.text.text}`);
-        setData(msg.from, msg.text.text);
+        console.log(`${msg.from}: ${msg.text}`);
+
         const li = document.createElement('li');
         li.innerHTML = `<div class="message-sender">${escapeHtml(username)} - ${escapeHtml(timeStr)}</div><div class="message-text">${escapeHtml(msg.text)}</div>`;
         if (username === userNameInput.value.trim()) {
@@ -182,6 +197,9 @@ document.addEventListener('DOMContentLoaded', () => {
             li.innerHTML = `<div class="message-sender">${escapeHtml(sender)} - ${escapeHtml(timestammp)}</div><div class="message-text">${escapeHtml(msg)}</div>`;
             li.classList.add('my-message');
             // send to server (timestamp is shown separately in UI)
+            if(saveToDB) {
+                setData(msg.from, msg.text);
+            }
             socket.emit('message', {roomId: room, text: msg});
             if (enabled) {
                 let current = messages.length - 1;
