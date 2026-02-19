@@ -36,13 +36,13 @@ function initChatSocket(server) {
 
       // store message in history
       messageStore.add(roomId, message);
-      let sql = `INSERT INTO chats(sender, message) VALUES(${socket.username}, ${socket.message}`;
+      let sql = `INSERT INTO chats(sender, message) VALUES(${socket.username}, ${socket.message})`;
       database.query(sql, function(error, response) {
         if(error) {
           console.log(error);
         }
         else {
-          console.log(`'${socket.username}' sent a message: '${socket.message.text}' that was saved to database.`);
+          console.log(`'${socket.username}' sent a message: '${message.text}' that was saved to database.`);
         }
       });
 
