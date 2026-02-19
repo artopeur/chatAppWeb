@@ -2,7 +2,7 @@
 let io_url = "https://chatapp.ydns.eu:3000";
 let api_url = "https://chatapp.ydns.eu:3000/api/";
 document.addEventListener('DOMContentLoaded', () => {
-
+    let data = getData();
     console.log('document ready');
     const socket = io.connect(io_url, {transports: ["polling", "websocket"]});
     var messages = [];
@@ -47,7 +47,10 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Failed to load rooms', err);
         }
     }
-
+    function getData() {
+        let res = fetch(api_url + "chats");
+        console.log(res);
+    }
     // load rooms on startup
     loadRooms();
 
