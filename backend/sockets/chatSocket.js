@@ -56,14 +56,8 @@ function initChatSocket(server) {
     });
 
     socket.on("disconnect", () => {
-      const text = `${socket.username} has left the room.`
-      const message = {
-        from: socket.username || socket.id,
-        text,
-        timestamp: Date.now()
-      };
       console.log("Disconnected:", socket.username || socket.id);
-      io.to(roomId).emit("message", message)
+
     });
   });
 }
