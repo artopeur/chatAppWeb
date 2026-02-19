@@ -1,7 +1,7 @@
 const { Server } = require("socket.io");
 const messageStore = require("../models/messageStore");
 const database = require("../models/database");
-
+const saveToDatabase = true;
 
 function initChatSocket(server) {
   const io = new Server(server, {
@@ -36,15 +36,18 @@ function initChatSocket(server) {
 
       // store message in history
       messageStore.add(roomId, message);
-      let sql = `INSERT INTO chats(sender, message) VALUES('${socket.username}', '${message.text}')`;
-      database.query(sql, function(error, response) {
-        if(error) {
-          console.log(error);
-        }
-        else {
-          console.log(`'${socket.username}' sent a message: '${message.text}' that was saved to database.`);
-        }
-      });
+      if(saveToDatabase) {
+          let sql = `INSERT INTO chats(sender, message) VALUES('${socket.username}', '${message.text}')`;
+          database.query(sql, function(error, response) {
+          if(error) {
+            console.log(error);
+          }
+          else {
+            console.log(`'${socket.username}' sent a message: '${message.text}' that was saved to database.`);
+          }
+        });
+      }
+      
 
       // broadcast message to room
       io.to(roomId).emit("message", message);
