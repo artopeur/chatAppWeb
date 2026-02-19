@@ -25,6 +25,7 @@ function initChatSocket(server) {
     socket.on("join-room", (roomId) => {
       socket.join(roomId);
       console.log(`${socket.username || socket.id} joined ${roomId}`);
+      // reload twenty last messages.
     });
 
     socket.on("message", ({ roomId, text }) => {
@@ -34,7 +35,8 @@ function initChatSocket(server) {
         timestamp: Date.now()
       };
 
-      // store message in history
+      // store message in history : Still need to add rooms to database and select them by room on entry.
+      // There is a method to get the last twenty messages, that can be read from the console.
       messageStore.add(roomId, message);
       if(saveToDatabase) {
           let sql = `INSERT INTO chats(sender, message) VALUES('${socket.username}', '${message.text}')`;
@@ -54,7 +56,14 @@ function initChatSocket(server) {
     });
 
     socket.on("disconnect", () => {
+      const text = `${socket.username} has left the room.`
+      const message = {
+        from: socket.username || socket.id,
+        text,
+        timestamp: Date.now()
+      };
       console.log("Disconnected:", socket.username || socket.id);
+      io.to(roomId).emit("message", message)
     });
   });
 }

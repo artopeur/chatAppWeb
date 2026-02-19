@@ -119,12 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
         scrollToBottom();
     });
     socket.on("disconnect", (msg) => {
-        const username = msg.from;
-        const timeStr = msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString() : '';
-        console.log(`${msg.from}: ${msg.text}`);
-
-        const li = document.createElement('li');
-        li.innerHTML = `<div class="message-sender">${escapeHtml(username)} - ${escapeHtml(timeStr)}</div><div class="message-text">${escapeHtml(msg.text)}</div>`;
+        socket.emit("message", {roomId: room, text:" has left the room!"});
     });
 
     checkbox.addEventListener('change', function() {
