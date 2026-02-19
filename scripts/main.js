@@ -118,6 +118,14 @@ document.addEventListener('DOMContentLoaded', () => {
         messageList.appendChild(li);
         scrollToBottom();
     });
+    socket.on("disconnect", (msg) => {
+        const username = msg.from;
+        const timeStr = msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString() : '';
+        console.log(`${msg.from}: ${msg.text}`);
+
+        const li = document.createElement('li');
+        li.innerHTML = `<div class="message-sender">${escapeHtml(username)} - ${escapeHtml(timeStr)}</div><div class="message-text">${escapeHtml(msg.text)}</div>`;
+    });
 
     checkbox.addEventListener('change', function() {
         if (this.checked) {
@@ -197,9 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
             li.innerHTML = `<div class="message-sender">${escapeHtml(sender)} - ${escapeHtml(timestammp)}</div><div class="message-text">${escapeHtml(msg)}</div>`;
             li.classList.add('my-message');
             // send to server (timestamp is shown separately in UI)
-            if(saveToDB) {
-                setData(msg.from, msg.text);
-            }
+
             socket.emit('message', {roomId: room, text: msg});
             if (enabled) {
                 let current = messages.length - 1;
