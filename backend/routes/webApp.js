@@ -1,8 +1,12 @@
 var express = require('express');
 var router = express.Router();
 var messageStore = require('../models/messageStore');
-const db = require('../models/database');
+const database = require('../models/database');
+//const env = require('dotenv');
 
+
+//console.log("ENV:", process.env.MYSQL_HOST);
+//console.log("POOL QUERY:", typeof database.query);
 
 const rooms = [
   { id: "room1", name: "General" },
@@ -29,18 +33,32 @@ router.get('/messages', function(req, res, next) {
   res.json(messageStore.list(roomId));
 });
 
-router.get('/chats', function(req,res) {
-  let data = db.query("SELECT * FROM chats ORDER BY id DESC LIMIT 20", function(error, result) {
-    if(error) {
-      req.json(error);
-    }
-    else {
-      req.json(result);
-    }
-  });
-  console.log(data);
+
+router.post('/chats', function(req, res) {
+    console.log("function start");
+
+    let sql = "Insert into chats(user_id, message) VALUES(1,'this one.')";
+    database.query(sql, function(error, result){
+        if(error) {
+            console.log(error);
+            return res.status(500).json({ error: error.message });
+        }
+        console.log(result);
+        return res.json(result);
+    });
 });
+router.get('/chats', function(req, res) {
+	console.log("function start");
 
-
+	let sql = "Select * from chats order by created_at DESC LIMIT 20";
+	database.query(sql, function(error,result) {
+	    if(error) {
+		console.log(error);
+		return res.status(500).json({ error: error.message });
+	    }
+            console.log(result);
+            return res.json(result);
+        });
+});
 
 module.exports = router;
