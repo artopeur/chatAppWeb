@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     var intervalTimer = null;
     var enabled = false;
     var saveToDB = true;
+    var curRoom = "";
     const interval = document.querySelector('#interval');
     const chatInput = document.querySelector('#chatInput');
     const sendButton = document.querySelector('#sendButton');
@@ -175,9 +176,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         let room = selectRoom.value.trim();
         if(room === '') {
+            if(curRoom != '') {
+                socket.emit("leave-room", curRoom);
+                curRoom = '';
+            }
             return;
         }
         let name = userNameInput.value.trim();
+        if(curRoom == "") {
+            curRoom = room;
+        }
+        else {
+            if(room != curRoom) {
+                socket.emit("leave-room", curRoom);
+                curRoom = room;
+            }
+        }
         console.log('joining room', room);
         console.log('username', name);
         socket.emit("set-username", name);
