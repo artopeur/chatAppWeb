@@ -119,9 +119,6 @@ document.addEventListener('DOMContentLoaded', () => {
         messageList.appendChild(li);
         scrollToBottom();
     });
-    socket.on("disconnect", (msg) => {
-        socket.emit("message", {roomId: socket.roomId, text:" has left the room!"});
-    });
 
     checkbox.addEventListener('change', function() {
         if (this.checked) {
@@ -177,7 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let room = selectRoom.value.trim();
         if(room === '') {
             if(curRoom != '') {
-                socket.emit("leave-room", curRoom);
+                socket.emit("leave-room", curRoom, userNameInput.value.trim());
                 curRoom = '';
             }
             return;

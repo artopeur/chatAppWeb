@@ -92,7 +92,7 @@ function initChatSocket(server) {
     socket.on("leave-room", (roomid, user) => {
       const message = {
         from: user || socket.id,
-        text: user + "has left the room",
+        text: user + " has left the room",
         timestamp: Date.now()
       }
       io.to(roomid).emit("message", message);
