@@ -25,7 +25,7 @@ function initChatSocket(server) {
     socket.on("join-room", (roomId) => {
       // reload twenty last messages.
       if(saveToDatabase) {
-        let sql = `SELECT * FROM chats WHERE room=${roomId} ORDER BY id DESC`;
+        let sql = `SELECT * FROM chats WHERE room='${roomId}' ORDER BY id DESC`;
         database.query(sql, function(error, response) {
           if(error) {
               console.log(error);
