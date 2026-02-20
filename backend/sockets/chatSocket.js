@@ -95,7 +95,7 @@ function initChatSocket(server) {
         text: `${socket.username} has left the room.`,
         timestamp: Date.now()
       };
-      io.to(roomId).emit(msg);
+      io.to(roomId).emit("message",msg);
     });
   });
 }
