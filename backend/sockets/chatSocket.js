@@ -92,7 +92,7 @@ function initChatSocket(server) {
         text: `${socket.username} has left the room.`,
         timestamp: Date.now()
       };
-      io.to(roomId).timeout(1000).emit(msg);
+      io.to(roomId).emit(msg);
     });
   });
 }
