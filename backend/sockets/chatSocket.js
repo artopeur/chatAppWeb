@@ -23,31 +23,33 @@ function initChatSocket(server) {
     });
 
     socket.on("join-room", (roomId) => {
+      
+      // join room with id
+      socket.join(roomId);
+      console.log(`${socket.username || socket.id} joined ${roomId}`);
       // reload twenty last messages.
       if(saveToDatabase) {
-        let sql = `SELECT * FROM chats WHERE room='${roomId}' ORDER BY id DESC`;
-        database.query(sql, function(error, response) {
+        let sql = `SELECT * FROM chats WHERE room=? ORDER BY id DESC`;
+        database.query(sql,[roomId], function(error, response) {
           if(error) {
               console.log(error);
           }
           else {
-            response[0].forEach( element => {
+            response.reverse().forEach( element => {
               console.log(`${element.sender_id}:${element.created_at} ${element.sender}: ${element.room}: ${element.message}`);
               let msg = {
                 from: element.sender || element.sender_id,
                 text: element.message,
-                timestamp: Date().at(element.create_at)
+                timestamp: element.create_at
               };
-              io.to(roomId).emit(msg);
+              io.to(roomId).emit("message", msg);
             });
            
             
           }
         });
       }
-      // join room with id
-      socket.join(roomId);
-      console.log(`${socket.username || socket.id} joined ${roomId}`);
+      
       
     });
     // read message, populate message
