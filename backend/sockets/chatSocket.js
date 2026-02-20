@@ -86,7 +86,7 @@ function initChatSocket(server) {
     });
     // Implementation of left room message still missing.
     socket.on("disconnect", () => {
-      console.log("Disconnected:", socket.username || socket.id, socket);
+      console.log("Disconnected:", socket.username || socket.id, socket.rooms);
       const message = {
         from: socket.username || socket.id,
         text:  " has left the room",
