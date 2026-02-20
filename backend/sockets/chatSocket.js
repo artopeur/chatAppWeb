@@ -43,7 +43,7 @@ function initChatSocket(server) {
                 timestamp: element.create_at
               };
               //io.to(roomId).emit("message", msg);
-              io.socket.emit("message", msg);
+              socket.emit("message", msg);
             });
            
             
