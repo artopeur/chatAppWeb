@@ -89,13 +89,13 @@ function initChatSocket(server) {
       console.log("Disconnected:", socket.username || socket.id);
       
     });
-    socket.on("leave-room", (roomid) => {
-      let msg = {
-        from: socket.username || socket.id,
-        text: `${socket.username} has left the room.`,
+    socket.on("leave-room", (roomid, user) => {
+      const message = {
+        from: user || socket.id,
+        text: user + "has left the room",
         timestamp: Date.now()
-      };
-      io.to(roomId).emit("message",msg);
+      }
+      io.to(roomid).emit("message", message);
     });
   });
 }
