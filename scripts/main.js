@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
         scrollToBottom();
     });
     socket.on("disconnect", (msg) => {
-        socket.emit("message", {roomId: room, text:" has left the room!"});
+        socket.emit("message", {roomId: socket.roomId, text:" has left the room!"});
     });
 
     checkbox.addEventListener('change', function() {
