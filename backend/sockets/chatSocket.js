@@ -85,13 +85,14 @@ function initChatSocket(server) {
       io.to(roomId).emit("message", message);
     });
     // Implementation of left room message still missing.
-    socket.on("disconnect", () => {
+    socket.on("disconnect", (roomId) => {
       console.log("Disconnected:", socket.username || socket.id);
       let msg = {
         from: socket.username || socket.id,
         text: `${socket.username} has left the room.`,
         timestamp: Date.now()
       };
+      io.to(roomId).timeout(1000).emit(msg);
     });
   });
 }
