@@ -185,7 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         else {
             if(room != curRoom) {
-                socket.emit("leave-room", curRoom);
+                socket.emit("leave-room", curRoom, userNameInput.value.trim());
                 curRoom = room;
             }
         }
