@@ -2,6 +2,7 @@ const { Server } = require("socket.io");
 const messageStore = require("../models/messageStore");
 const database = require("../models/database");
 const saveToDatabase = true;
+let userList = {};
 
 function initChatSocket(server) {
   const io = new Server(server, {
@@ -23,7 +24,7 @@ function initChatSocket(server) {
     });
 
     socket.on("join-room", (roomId) => {
-      
+      userList[socket.username] = roomId;
       // join room with id
       socket.join(roomId);
       console.log(`${socket.username || socket.id} joined ${roomId}`);
@@ -86,13 +87,13 @@ function initChatSocket(server) {
     });
     // Implementation of left room message still missing.
     socket.on("disconnect", () => {
-      console.log("Disconnected:", socket.username || socket.id, socket.rooms);
+      console.log("Disconnected:", socket.username || socket.id, userList[socket.username]);
       const message = {
         from: socket.username || socket.id,
         text:  " has left the room",
         timestamp: Date.now()
       }
-      io.to(socket.room).emit("message", message);
+      io.to(userList[socket.username]).emit("message", message);
     });
     socket.on("leave-room", (roomid, user) => {
       const message = {
