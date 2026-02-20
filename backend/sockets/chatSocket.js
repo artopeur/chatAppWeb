@@ -23,11 +23,34 @@ function initChatSocket(server) {
     });
 
     socket.on("join-room", (roomId) => {
+      // reload twenty last messages.
+      if(saveToDatabase) {
+        let sql = `SELECT * FROM chats WHERE room=${roomId} ORDER BY id DESC`;
+        database.query(sql, function(error, response) {
+          if(error) {
+              console.log(error);
+          }
+          else {
+            response[0].forEach( element => {
+              console.log(`${element.sender_id}:${element.created_at} ${element.sender}: ${element.room}: ${element.message}`);
+              let msg = {
+                from: element.sender || element.sender_id,
+                text: element.message,
+                timestamp: Date().at(element.create_at)
+              };
+              io.to(roomId).emit(msg);
+            });
+           
+            
+          }
+        });
+      }
+      // join room with id
       socket.join(roomId);
       console.log(`${socket.username || socket.id} joined ${roomId}`);
-      // reload twenty last messages.
+      
     });
-
+    // read message, populate message
     socket.on("message", ({ roomId, text }) => {
       const message = {
         from: socket.username || socket.id,
@@ -35,11 +58,15 @@ function initChatSocket(server) {
         timestamp: Date.now()
       };
 
-      // store message in history : Still need to add rooms to database and select them by room on entry.
-      // There is a method to get the last twenty messages, that can be read from the console.
+      
+      // adding new message to messageStore
       messageStore.add(roomId, message);
+
+      // There is a method to get the last twenty messages from all rooms, that can be read from the console on the website.
+      // Used when no room is selected / first load.
+      // store message in history : Still need to add rooms to database and select them by room on entry.
       if(saveToDatabase) {
-          let sql = `INSERT INTO chats(sender, message) VALUES('${socket.username}', '${message.text}')`;
+          let sql = `INSERT INTO chats(sender, room, message) VALUES('${socket.username}', '${roomId}', '${message.text}')`;
           database.query(sql, function(error, response) {
           if(error) {
             console.log(error);
@@ -54,7 +81,7 @@ function initChatSocket(server) {
       // broadcast message to room
       io.to(roomId).emit("message", message);
     });
-
+    // Implementation of left room message still missing.
     socket.on("disconnect", () => {
       console.log("Disconnected:", socket.username || socket.id);
 
