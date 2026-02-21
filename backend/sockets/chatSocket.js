@@ -51,8 +51,6 @@ function initChatSocket(server) {
           }
         });
       }
-      
-      
     });
     // read message, populate message
     socket.on("message", ({ roomId, text }) => {
@@ -61,8 +59,6 @@ function initChatSocket(server) {
         text,
         timestamp: Date.now()
       };
-
-      
       // adding new message to messageStore
       messageStore.add(roomId, message);
 
@@ -79,11 +75,13 @@ function initChatSocket(server) {
             console.log(`'${socket.username}' sent a message: '${message.text}' that was saved to database.`);
           }
         });
+        // broadcast message to room
+        io.to(roomId).emit("message", message);
       }
-      
-
-      // broadcast message to room
-      io.to(roomId).emit("message", message);
+      else {
+        // broadcast message to room
+        io.to(roomId).emit("message", message);
+      }      
     });
     // Implementation of left room message still missing.
     socket.on("disconnect", () => {
