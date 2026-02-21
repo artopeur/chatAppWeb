@@ -30,7 +30,7 @@ function initChatSocket(server) {
       console.log(`${socket.username || socket.id} joined ${roomId}`);
       // reload twenty last messages.
       if(saveToDatabase) {
-        let sql = `SELECT * FROM chats WHERE room=? ORDER BY id DESC`;
+        let sql = `SELECT * FROM chats WHERE room=? ORDER BY id DESC LIMIT 20`;
         database.query(sql,[roomId], function(error, response) {
           if(error) {
               console.log(error);
